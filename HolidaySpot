@@ -1,0 +1,137 @@
+package com.holidayspot.model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import com.holidayspot.dao.utils.DBConnections;
+import com.holidayspot.pojo.HotelDetails;
+
+public class HolidaySpot {
+	public boolean login(String userid, String password) throws Exception {
+		boolean loginflag = false;
+		Connection connection = DBConnections.createConnection();
+		PreparedStatement ps = connection
+				.prepareStatement("select * from login where username=? and password=?");
+		ps.setString(1, userid);
+		ps.setString(2, password);
+		ResultSet set = ps.executeQuery();
+		if (set.last()) {
+			loginflag = true;
+		}
+		return loginflag;
+
+	}
+
+	public List<HotelDetails> getallHotels() {
+		List<HotelDetails> details = new ArrayList<HotelDetails>();
+		try {
+			Connection connection = DBConnections.createConnection();
+			PreparedStatement ps = connection
+					.prepareStatement("select hotel_id,hotel_name from hotel");
+			ResultSet set = ps.executeQuery();
+			while (set.next()) {
+				HotelDetails hodetails = new HotelDetails();
+				hodetails.setHotleId(set.getString("hotel_id"));
+				hodetails.setHotleName(set.getString("hotel_name"));
+				details.add(hodetails);
+			}
+			set.close();
+			ps.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+		}
+		return details;
+	}
+
+	public List<HotelDetails> getallRooms(String hotelId) {
+		List<HotelDetails> details = new ArrayList<HotelDetails>();
+		try {
+			Connection connection = DBConnections.createConnection();
+			PreparedStatement ps = connection
+					.prepareStatement("select type_id,type_name from type_id");
+			ResultSet set = ps.executeQuery();
+			while (set.next()) {
+				HotelDetails hodetails = new HotelDetails();
+				hodetails.setRoomType(set.getString("type_name"));
+				hodetails.setRoomTypeId(set.getString("type_id"));
+				details.add(hodetails);
+			}
+			set.close();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return details;
+	}
+
+	public String updateAvailability(String hotelId, String type,
+			String noOfRooms) {
+		String uniqueKey = UUID.randomUUID().toString();
+		try {
+			Connection connection = DBConnections.createConnection();
+			PreparedStatement ps = connection
+					.prepareStatement("insert into status(availability,customer_id,hotel_id,type_id,date_of_booking,booking_status) values (?,?,?,?,now(),?)");
+			ps.setString(1, noOfRooms);
+			ps.setString(2, uniqueKey);
+			ps.setString(3, hotelId);
+			ps.setString(4, type);
+			ps.setString(5, "P");
+			ps.executeUpdate();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return uniqueKey;
+	}
+
+	public boolean checkStatus(String custId) {
+		String availability =null;
+		String hotelId = null;
+		String typeName= null;
+		boolean bookflag= false;
+		HotelDetails details= new HotelDetails();
+		
+		try {
+			Connection connection = DBConnections.createConnection();
+			PreparedStatement ps = connection
+					.prepareStatement("select availability,hotel_id,t.type_id,t.type_name from status s ,type_id t  where t.type_id=s.type_id and customer_id=? and TIMESTAMPDIFF(MINUTE,date_of_booking,NOW())<30");
+			ps.setString(1, custId);
+			ResultSet set = ps.executeQuery();
+			if (set.next()) {
+				 availability =set.getString("availability");
+				 hotelId =set.getString("hotel_id");
+				 set.getString("t.type_id");
+				 typeName = set.getString("t.type_name");
+				
+			} else {
+				throw new Exception("Invalid User");
+			}
+			set.close();
+			ps.close();
+			/*// Availability
+			PreparedStatement ps1 = connection
+					.prepareStatement("SELECT * FROM availability WHERE hotel_id="+hotelId+" AND ("
+							+ typeName
+							+ "_total - "
+							+ typeName
+							+ "_booked)>="
+							+ availability);
+			ResultSet set1 = ps1.executeQuery();
+			if (set.next()) {
+				bookflag = true;
+			}
+			set1.close();
+			ps1.close();
+*/
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return bookflag;
+	}
+}
