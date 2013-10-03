@@ -1,0 +1,30 @@
+package com.holidayspot.dao.utils;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class DBConnections {
+	static Connection connection = null;
+
+	public Connection getConnection() {
+		if (connection != null) {
+			createConnection();
+		}
+		return connection;
+	}
+
+	public  static Connection createConnection() {
+		try {
+			String driver = "com.mysql.jdbc.Driver";
+			String userName = "root";
+			String password = "root";
+			String url = "jdbc:mysql://localhost:3306/";
+			String dbName = "holidayspot";
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url + dbName, userName,password);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return connection;
+	}
+}
