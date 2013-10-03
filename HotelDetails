@@ -1,0 +1,55 @@
+package com.holidayspot.pojo;
+
+public class HotelDetails {
+	private String hotleId = null;
+	private String hotleName = null;
+	private String roomType = null;
+	private String roomTypeId = null;
+	private String cost = null;
+	private String noOfRooms = null;
+	private boolean bookingFlag = false;
+	public void setHotleId(String hotleId) {
+		this.hotleId = hotleId;
+	}
+	public String getHotleId() {
+		return hotleId;
+	}
+	public void setHotleName(String hotleName) {
+		this.hotleName = hotleName;
+	}
+	public String getHotleName() {
+		return hotleName;
+	}
+	public void setRoomTypeId(String roomTypeId) {
+		this.roomTypeId = roomTypeId;
+	}
+	public String getRoomTypeId() {
+		return roomTypeId;
+	}
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
+	}
+	public String getRoomType() {
+		return roomType;
+	}
+	public void setCost(String cost) {
+		this.cost = cost;
+	}
+	public String getCost() {
+		return cost;
+	}
+	public void setNoOfRooms(String noOfRooms) {
+		this.noOfRooms = noOfRooms;
+	}
+	public String getNoOfRooms() {
+		return noOfRooms;
+	}
+	public void setBookingFlag(boolean bookingFlag) {
+		this.bookingFlag = bookingFlag;
+	}
+	public boolean isBookingFlag() {
+		return bookingFlag;
+	}
+	
+
+}
