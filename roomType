@@ -1,0 +1,41 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<%@include file="header.jsp" %> 
+  <form action="HolidaySpot">
+<table>
+<tr>
+<td>
+Room Type</td><td> <select name="roomType">
+<option value="1">Deluxe Room Single</option>
+<option value="2">Deluxe Room Double</option>
+<option value="3">Deluxe suite Single</option>
+<option value="4">Deluxe suite double</option>
+<option value="5">Heritary Single</option>
+<option value="6">Heritary Double</option>
+<option value="7">Heritary Triple single</option>
+<option value="8">Heritary Triple Double</option>
+</select>
+</td>
+</tr>
+<tr>
+<td>
+Amount </td><td><input type="text"></td></tr>
+<tr>
+<td> Required no of Rooms </td>
+
+<td> <select name="noOfRooms">
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+</select>
+</td></tr>
+<tr>
+<td>
+<input type="submit" class="btn btn-default" value ="submit">
+<input type="hidden" name="hotelId" value="<%=request.getParameter("hotelId")%>">
+<input type="hidden" name="event" value="roomrequest">
+</table>
+
+</form>
