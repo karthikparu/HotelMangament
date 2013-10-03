@@ -1,0 +1,23 @@
+package com.holidayspot.pojo;
+
+public class Customer {
+	private String custId = null;
+	private String custpass = null;
+
+	public void setCustId(String custId) {
+		this.custId = custId;
+	}
+
+	public String getCustId() {
+		return custId;
+	}
+
+	public void setCustpass(String custpass) {
+		this.custpass = custpass;
+	}
+
+	public String getCustpass() {
+		return custpass;
+	}
+
+}
