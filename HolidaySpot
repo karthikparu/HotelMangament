@@ -91,47 +91,117 @@ public class HolidaySpot {
 	}
 
 	public boolean checkStatus(String custId) {
-		String availability =null;
+		String availability = null;
 		String hotelId = null;
-		String typeName= null;
-		boolean bookflag= false;
-		HotelDetails details= new HotelDetails();
-		
+		String typeName = null;
+		boolean bookflag = false;
+		HotelDetails details = new HotelDetails();
+
 		try {
 			Connection connection = DBConnections.createConnection();
 			PreparedStatement ps = connection
-					.prepareStatement("select availability,hotel_id,t.type_id,t.type_name from status s ,type_id t  where t.type_id=s.type_id and customer_id=? and TIMESTAMPDIFF(MINUTE,date_of_booking,NOW())<30");
+					.prepareStatement("select availability,hotel_id,t.type_id,t.type_name from status s ,type_id t  where t.type_id=s.type_id and customer_id=? and status='y' and TIMESTAMPDIFF(MINUTE,date_of_booking,NOW())<30");
 			ps.setString(1, custId);
 			ResultSet set = ps.executeQuery();
 			if (set.next()) {
-				 availability =set.getString("availability");
-				 hotelId =set.getString("hotel_id");
-				 set.getString("t.type_id");
-				 typeName = set.getString("t.type_name");
-				
+				availability = set.getString("availability");
+				hotelId = set.getString("hotel_id");
+				set.getString("t.type_id");
+				typeName = set.getString("t.type_name");
+				bookflag = true;
+
 			} else {
 				throw new Exception("Invalid User");
 			}
 			set.close();
 			ps.close();
-			/*// Availability
-			PreparedStatement ps1 = connection
-					.prepareStatement("SELECT * FROM availability WHERE hotel_id="+hotelId+" AND ("
-							+ typeName
-							+ "_total - "
-							+ typeName
-							+ "_booked)>="
-							+ availability);
-			ResultSet set1 = ps1.executeQuery();
-			if (set.next()) {
-				bookflag = true;
-			}
-			set1.close();
-			ps1.close();
-*/
+			/*
+			 * // Availability PreparedStatement ps1 = connection
+			 * .prepareStatement
+			 * ("SELECT * FROM availability WHERE hotel_id="+hotelId+" AND (" +
+			 * typeName + "_total - " + typeName + "_booked)>=" + availability);
+			 * ResultSet set1 = ps1.executeQuery(); if (set.next()) { bookflag =
+			 * true; } set1.close(); ps1.close();
+			 */
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return bookflag;
+	}
+
+	public void insertAvailability(String custid, String mobile, String email,
+			String address, String pan, String cc, String bank, String branch,
+			String cvv) {
+		try {
+			Connection connection = DBConnections.createConnection();
+			PreparedStatement ps = connection
+					.prepareStatement("INSERT INTO book_my_room(customer_id,mobile_no,email,address,pan,cc,bank,branch,cvv)VALUES(?,?,?,?,?,?,?,?,?)");
+			ps.setString(1, custid);
+			ps.setString(2, mobile);
+			ps.setString(3, email);
+			ps.setString(4, address);
+			ps.setString(5, pan);
+			ps.setString(6, cc);
+			ps.setString(7, bank);
+			ps.setString(8, branch);
+			ps.setString(9, cvv);
+			ps.executeUpdate();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void cancelRequest(String custid) {
+		try {
+			Connection connection = DBConnections.createConnection();
+			PreparedStatement ps = connection
+					.prepareStatement("delete from status where customer_id=?");
+			ps.setString(1, custid);
+			ps.executeUpdate();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public List<HotelDetails> getHotelDetails() {
+		List<HotelDetails> details = new ArrayList<HotelDetails>();
+		try {
+			Connection connection = DBConnections.createConnection();
+			PreparedStatement ps = connection
+					.prepareStatement("SELECT availability,s.hotel_id,t.type_id,t.type_name,h.hotel_name,customer_id FROM STATUS s ,type_id t,hotel h  WHERE t.type_id=s.type_id AND h.hotel_id=s.hotel_id AND  booking_status='p' AND TIMESTAMPDIFF(MINUTE,date_of_booking,NOW())<30;");
+			ResultSet set = ps.executeQuery();
+			while (set.next()) {
+				HotelDetails hodetails = new HotelDetails();
+				hodetails.setRoomType(set.getString("t.type_name"));
+				hodetails.setHotleName(set.getString("h.hotel_name"));
+				hodetails.setNoOfRooms(set.getString("availability"));
+				hodetails.setCustId(set.getString("customer_id"));
+				details.add(hodetails);
+			}
+			set.close();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return details;
+
+	}
+
+	public void confirmRequest(String custid) {
+		try {
+			Connection connection = DBConnections.createConnection();
+			PreparedStatement ps = connection
+					.prepareStatement("update  status set booking_status='y' where customer_id=?");
+			ps.setString(1, custid);
+			ps.executeUpdate();
+			ps.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
 	}
 }
