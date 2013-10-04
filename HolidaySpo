@@ -45,12 +45,12 @@ public class HolidaySpot extends HttpServlet {
 				if (loginFlag) {
 					HttpSession session = request.getSession();
 					session.setAttribute("userid", userid);
-					List<HotelDetails> hotelDetails = holidaySpot.getallHotels();
-					request.setAttribute("hoteldetails", hotelDetails);
+					List<HotelDetails> hotelDetails = holidaySpot
+							.getHotelDetails();
+					request.setAttribute("hotelDetails", hotelDetails);
 					RequestDispatcher dispatcher = request
-							.getRequestDispatcher("/roomrequest.jsp");
-					dispatcher.forward(request, response);
-
+					.getRequestDispatcher("/admin.jsp");
+			dispatcher.forward(request, response);
 				} else {
 					RequestDispatcher dispatcher = request
 							.getRequestDispatcher("/login.jsp");
@@ -83,7 +83,7 @@ public class HolidaySpot extends HttpServlet {
 		{
 			String custId=request.getParameter("custId");
 			boolean bookflag=holidaySpot.checkStatus(custId);
-			if(true)
+			if(bookflag)
 			{
 			RequestDispatcher dispatcher = request
 			.getRequestDispatcher("/roomavailable.jsp?");
@@ -93,12 +93,65 @@ public class HolidaySpot extends HttpServlet {
 		else if("book".equals(event))
 		{
 			String custId=request.getParameter("custId");
-			String mobile=request.getParameter("");
 			RequestDispatcher dispatcher = request
-			.getRequestDispatcher("/roomavailable.jsp?");
+			.getRequestDispatcher("/bookroom.jsp?custId="+custId);
 			dispatcher.forward(request, response);
 		}
-			
+		else if("logout".equals(event)){
+			HttpSession session =request.getSession();
+			session.invalidate();
+			RequestDispatcher dispatcher = request
+			.getRequestDispatcher("/index.jsp");
+			dispatcher.forward(request, response);
+		}
+		else if("hotels".equals(event))
+		{
+			List<HotelDetails> hotelDetails = holidaySpot.getallHotels();
+			request.setAttribute("hoteldetails", hotelDetails);
+			RequestDispatcher dispatcher = request
+					.getRequestDispatcher("/roomrequest.jsp");
+			dispatcher.forward(request, response);
+		}
+		else if("Proceed Pay".equals(event))
+		{
+			String custid=request.getParameter("custid");
+			String mobile =request.getParameter("mobile");
+			String email =request.getParameter("email");
+			String address =request.getParameter("address");
+			String pan =request.getParameter("pan");
+			String cc =request.getParameter("cc");
+			String bank =request.getParameter("bank");
+			String branch =request.getParameter("branch");
+			String cvv =request.getParameter("cvv");
+			holidaySpot.insertAvailability(custid,mobile,email,address,pan,cc,bank,branch,cvv);
+			RequestDispatcher dispatcher = request
+			.getRequestDispatcher("/roomrequest.jsp");
+			dispatcher.forward(request, response);
+		}
+		else if("cancel".equals(event))
+		{
+			String custid=request.getParameter("custId");
+			holidaySpot.cancelRequest(custid);
+			RequestDispatcher dispatcher = request
+			.getRequestDispatcher("/index.jsp");
+			dispatcher.forward(request, response);
+		}
+			else if("otherrooms".equals(event))
+			{
+				String custid=request.getParameter("custId");
+				holidaySpot.cancelRequest(custid);
+				RequestDispatcher dispatcher = request
+				.getRequestDispatcher("/index.jsp");
+				dispatcher.forward(request, response);
+			}
+			else if("confirm".equals(event))
+			{
+				String custid=request.getParameter("custId");
+				holidaySpot.confirmRequest(custid);
+				RequestDispatcher dispatcher = request
+				.getRequestDispatcher("/index.jsp");
+				dispatcher.forward(request, response);
+			}
 	}
 		catch (Exception e) {
 			e.printStackTrace();
