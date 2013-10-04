@@ -16,11 +16,11 @@ function change(id)
 		}
 	else if(id=='2')
 		{
-		$("#event").val('otherrooms');
+		$("#event").val('roomrequest');
 		}
 	else if(id=='3')
 	{
-	$("#event").val('otherrooms');
+	$("#event").val('hotels');
 	}
 	else
 		{
@@ -63,4 +63,5 @@ The Requested Rooms are available. please Book the Room.
 
 </table>
 <input type="hidden" name="event" id="event">
+<input type="hidden" name="custid" value='<%=request.getParameter("custId") %>'>
 </form>
