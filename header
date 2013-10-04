@@ -34,8 +34,8 @@
 			  <li><a href="login.jsp">Admin</a></li>
               <li><a href="checkstatus.jsp">Status</a></li>
 			    <li><a href="cancel.jsp">Cancel</a></li>
-              <li><a href="RoomRequest">Search My Room</a></li>
-              <li><a href="RoomRequest">Log out</a></li>
+              <li><a href="HolidaySpot?event=hotels">Search My Room</a></li>
+              <li><a href="HolidaySpot?event=logout">Log out</a></li>
                
             </ul>
           </div>
