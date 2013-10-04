@@ -7,6 +7,7 @@ public class HotelDetails {
 	private String roomTypeId = null;
 	private String cost = null;
 	private String noOfRooms = null;
+	private String custId =null;
 	private boolean bookingFlag = false;
 	public void setHotleId(String hotleId) {
 		this.hotleId = hotleId;
@@ -49,6 +50,12 @@ public class HotelDetails {
 	}
 	public boolean isBookingFlag() {
 		return bookingFlag;
+	}
+	public void setCustId(String custId) {
+		this.custId = custId;
+	}
+	public String getCustId() {
+		return custId;
 	}
 	
 
