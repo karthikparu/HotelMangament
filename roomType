@@ -37,5 +37,4 @@ Amount </td><td><input type="text"></td></tr>
 <input type="hidden" name="hotelId" value="<%=request.getParameter("hotelId")%>">
 <input type="hidden" name="event" value="roomrequest">
 </table>
-
 </form>
